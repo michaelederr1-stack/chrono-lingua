@@ -1,38 +1,37 @@
 """
-Core parsing and linguistic transformation module for chrono-lingua.
+Chrono-Lingua Core Parser & Analytics
 """
 
-import time
-from typing import Dict, Any
+import re
 
 class ChronoParser:
-    def __init__(self, default_encoding: str = "utf-8"):
-        self.default_encoding = default_encoding
-
-    def transform(self, text: str, mode: str = "standard") -> Dict[str, Any]:
-        """
-        Transforms input text and returns structured linguistic mapping metadata.
-        """
-        if not text:
-            return {"original": "", "transformed": "", "mode": mode, "length": 0, "timestamp": time.time()}
-            
-        result = text
+    def transform(self, text: str, mode: str = "standard") -> dict:
         if mode == "uppercase":
-            result = text.upper()
+            transformed = text.upper()
         elif mode == "reverse":
-            result = text[::-1]
+            transformed = text[::-1]
         elif mode == "token_map":
-            result = ".".join([f"tok({word})" for word in text.split()])
+            transformed = f"TOKENS[{len(text.split())} words]"
+        elif mode == "stats":
+            words = text.split()
+            sentences = [s for s in re.split(r'[.!?]+', text) if s.strip()]
+            chars_no_spaces = len(text.replace(" ", ""))
+            avg_word_len = sum(len(w) for w in words) / len(words) if words else 0.0
+            read_time_sec = (len(words) / 200.0) * 60  # Assuming ~200 WPM reading speed
+            
+            transformed = {
+                "character_count": len(text),
+                "characters_no_spaces": chars_no_spaces,
+                "word_count": len(words),
+                "sentence_count": len(sentences),
+                "average_word_length": round(avg_word_len, 2),
+                "estimated_reading_time_seconds": round(read_time_sec, 1)
+            }
+        else:
+            transformed = text
             
         return {
             "original": text,
-            "transformed": result,
             "mode": mode,
-            "length": len(text),
-            "timestamp": time.time()
+            "result": transformed
         }
-
-if __name__ == "__main__":
-    parser = ChronoParser()
-    sample = "Initializing chrono-lingua protocol..."
-    print("Direct Execution Test:", parser.transform(sample, mode="token_map"))
