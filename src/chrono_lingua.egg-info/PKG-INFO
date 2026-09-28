@@ -1,0 +1,14 @@
+Metadata-Version: 2.4
+Name: chrono-lingua
+Version: 0.1.0
+Summary: A multilingual temporal parsing and structural translation framework
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0.0; extra == "dev"
+Requires-Dist: black; extra == "dev"
+Requires-Dist: flake8; extra == "dev"
+
+# Chrono-Lingua
+
+A framework for structured linguistic mapping, temporal analysis, and multi-format text transformation.
