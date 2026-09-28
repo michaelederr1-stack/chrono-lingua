@@ -1,8 +1,0 @@
-README.md
-pyproject.toml
-src/parser.py
-src/chrono_lingua.egg-info/PKG-INFO
-src/chrono_lingua.egg-info/SOURCES.txt
-src/chrono_lingua.egg-info/dependency_links.txt
-src/chrono_lingua.egg-info/requires.txt
-src/chrono_lingua.egg-info/top_level.txt
