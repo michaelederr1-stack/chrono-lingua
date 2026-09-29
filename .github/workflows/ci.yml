@@ -1,0 +1,46 @@
+name: CI & Build Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest
+    - name: Run tests with pytest
+      run: |
+        PYTHONPATH=. pytest -v
+
+  build-windows:
+    needs: test
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+    - name: Install dependencies & PyInstaller
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller
+    - name: Build executable with PyInstaller
+      run: |
+        pyinstaller --onefile --name chrono-lingua src/cli.py
+    - name: Upload Windows Executable Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: chrono-lingua-windows-exe
+        path: dist/chrono-lingua.exe
